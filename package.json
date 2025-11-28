@@ -1,0 +1,12 @@
+{
+  "name": "neon-totem",
+  "version": "1.0.0",
+  "description": "Totem votos + Neon Postgres + Netlify Functions",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo building"
+  },
+  "dependencies": {
+    "pg": "^8.11.0"
+  }
+}

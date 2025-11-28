@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Totem de Satisfação</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body { font-family: Arial, text-align:center; padding-top:60px; }
+    button { font-size: 28px; padding: 20px 40px; margin: 12px; width: 80%; border-radius:12px; }
+  </style>
+</head>
+<body>
+  <h1>Como foi o atendimento?</h1>
+  <input id="origem" placeholder="Origem (ex: Totem1)" style="font-size:18px;padding:8px;width:80%;margin-bottom:16px;">
+  <br>
+  <button onclick="votar(5)">⭐️⭐️⭐️⭐️⭐️ Ótimo</button>
+  <button onclick="votar(4)">⭐️⭐️⭐️⭐️ Bom</button>
+  <button onclick="votar(3)">⭐️⭐️⭐ Regular</button>
+  <button onclick="votar(2)">⭐️⭐️ Ruim</button>
+  <button onclick="votar(1)">⭐️ Péssimo</button>
+  <p id="msg" style="font-size:18px;color:green;display:none;margin-top:16px">Voto registrado — obrigado!</p>
+<script>
+async function votar(nota){
+  const origem = document.getElementById('origem').value || 'Totem1';
+  try{
+    const res = await fetch('/.netlify/functions/saveVote', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ nota, origem })
+    });
+    if(!res.ok) throw new Error('Erro ao gravar');
+    document.getElementById('msg').style.display='block';
+    setTimeout(()=>location.reload(),1200);
+  }catch(e){
+    alert('Falha: '+e.message);
+  }
+}
+</script>
+</body>
+</html>
