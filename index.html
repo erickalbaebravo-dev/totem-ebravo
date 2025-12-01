@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totem de Satisfação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(90deg, #d0c6ff, #6c68bc, #d0c6ff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 800px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .logo-container {
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            width: 50%; /* 10% maior que o original */
+            max-width: 400px;
+            height: auto;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+		
+		h2 {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 10px;
+            opacity: 0.5;
+		}
+        
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .vote-btn {
+            background: linear-gradient(to right, #4a6baf, #0bc11e);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-size: 1.8rem;
+            font-weight: 600;
+            padding: 20px 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .vote-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .vote-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, #5a7bbf, #4a6aac);
+        }
+        
+        .vote-btn:hover::before {
+            left: 100%;
+        }
+        
+        .vote-btn:active {
+            transform: translateY(0);
+        }
+        
+        .stars {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+        
+        .device-info {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 20px;
+            opacity: 0.7;
+        }
+        
+        /* Modal de confirmação */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            animation: modalAppear 0.3s ease-out;
+        }
+        
+        @keyframes modalAppear {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .modal h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .modal p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: #555;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .confirm-btn {
+            background: linear-gradient(to right, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .cancel-btn {
+            background: linear-gradient(to right, #f44336, #d32f2f);
+            color: white;
+        }
+        
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Responsividade */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .vote-btn {
+                font-size: 1.5rem;
+                padding: 15px 20px;
+            }
+            
+            .stars {
+                font-size: 1.7rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .vote-btn {
+                font-size: 1.3rem;
+                padding: 12px 15px;
+            }
+            
+            .stars {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <!-- Substitua pelo caminho correto da sua logo -->
+            <img src="ebravo_logo.png" alt="EBravo Logo" class="logo">
+        </div>
+        
+        <h1>Como foi o seu atendimento?</h1>
+        
+        <div class="buttons-container">
+            <button class="vote-btn" onclick="openModal(5)">
+                <span class="stars">⭐️⭐️⭐️⭐️⭐️</span>
+                <span>Excelente</span>
+            </button>
+            
+            <button class="vote-btn" onclick="openModal(4)">
+                <span class="stars">⭐️⭐️⭐️⭐️</span>
+                <span>Ótimo</span>
+            </button>
+            
+            <button class="vote-btn" onclick="openModal(3)">
+                <span class="stars">⭐️⭐️⭐️</span>
+                <span>Bom</span>
+            </button>
+            
+            <button class="vote-btn" onclick="openModal(2)">
+                <span class="stars">⭐️⭐️</span>
+                <span>Regular</span>
+            </button>
+            
+            <button class="vote-btn" onclick="openModal(1)">
+                <span class="stars">⭐️</span>
+                <span>Ruim</span>
+            </button>
+        </div>
+        
+        <div class="device-info" id="deviceInfo"></div>
+		<h2>Bravo Software Inc</h2>
+		<h2>Todos os direitos reservados</h2>
+    </div>
+    
+    <!-- Modal de confirmação -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <h2>Confirmar Voto</h2>
+            <p id="modalText">Você está prestes a votar com <span id="ratingStars"></span>.</p>
+            <p>Tem certeza que deseja confirmar?</p>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel-btn" onclick="closeModal()">Cancelar</button>
+                <button class="modal-btn confirm-btn" onclick="confirmVote()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variáveis globais
+        let currentRating = 0;
+        let deviceId = '';
+        
+        // Gerar ID do dispositivo baseado em informações disponíveis
+        function generateDeviceId() {
+            // Tenta obter informações únicas do dispositivo/navegador
+            const userAgent = navigator.userAgent;
+            const language = navigator.language;
+            const platform = navigator.platform;
+            
+            // Cria um hash simples baseado nessas informações
+            let hash = 0;
+            const str = userAgent + language + platform;
+            
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Converte para 32-bit integer
+            }
+            
+            return 'TOTEM_' + Math.abs(hash).toString().substring(0, 6);
+        }
+        
+        // Inicializar informações do dispositivo
+        function initDeviceInfo() {
+            deviceId = generateDeviceId();
+            document.getElementById('deviceInfo').textContent = `ID do dispositivo: ${deviceId}`;
+        }
+        
+        // Abrir modal de confirmação
+        function openModal(rating) {
+            currentRating = rating;
+            
+            // Definir texto das estrelas baseado na avaliação
+            let starsText = '';
+            switch(rating) {
+                case 5:
+                    starsText = '⭐️⭐️⭐️⭐️⭐️ (Excelente)';
+                    break;
+                case 4:
+                    starsText = '⭐️⭐️⭐️⭐️ (Ótimo)';
+                    break;
+                case 3:
+                    starsText = '⭐️⭐️⭐️ (Bom)';
+                    break;
+                case 2:
+                    starsText = '⭐️⭐️ (Regular)';
+                    break;
+                case 1:
+                    starsText = '⭐️ (Ruim)';
+                    break;
+            }
+            
+            document.getElementById('ratingStars').textContent = starsText;
+            document.getElementById('confirmationModal').style.display = 'flex';
+        }
+        
+        // Fechar modal
+        function closeModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+        }
+        
+        // Confirmar voto
+        async function confirmVote() {
+            try {
+                const res = await fetch('https://ebtotem.up.railway.app/save', {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ 
+                        nota: currentRating, 
+                        origem: deviceId 
+                    })
+                });
+                
+                if(!res.ok) throw new Error('Erro ao gravar voto');
+                
+                // Fechar modal e mostrar mensagem de sucesso
+                closeModal();
+                alert('Voto registrado com sucesso! Obrigado pela sua avaliação.');
+                
+                // Recarregar a página após um breve delay
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+                
+            } catch(e) {
+                alert('Falha ao registrar voto: ' + e.message);
+            }
+        }
+        
+        // Inicializar quando a página carregar
+        window.onload = function() {
+            initDeviceInfo();
+        };
+    </script>
+</body>
+</html>
