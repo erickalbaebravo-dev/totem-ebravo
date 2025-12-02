@@ -349,14 +349,14 @@
         // Confirmar voto
         async function confirmVote() {
             try {
-                const res = await fetch('https://ebtotem.up.railway.app/save', {
-                    method: 'POST',
-                    headers: {'Content-Type':'application/json'},
-                    body: JSON.stringify({ 
-                        nota: currentRating, 
-                        origem: deviceId 
-                    })
-                });
+				const res = await fetch('/api/gravar', {
+				    method: 'POST',
+				    headers: { 'Content-Type': 'application/json' },
+				    body: JSON.stringify({
+				        nota: currentRating,
+				        origem: deviceId
+				    })
+				});
                 
                 if(!res.ok) throw new Error('Erro ao gravar voto');
                 
