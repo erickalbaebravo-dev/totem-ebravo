@@ -27,7 +27,7 @@
 const ADMIN_PASS = 'admin123'; // altere localmente antes de publicar
 async function carregar(){
   if(document.getElementById('senha').value !== ADMIN_PASS){ alert('Senha incorreta'); return; }
-  const res = await fetch('https://ebtotem.up.railway.app/listVotes');
+  const res = await fetch('/api/listar');
   const data = await res.json();
   const tbody = document.getElementById('tbody'); tbody.innerHTML='';
   data.forEach(r=>{
@@ -38,7 +38,7 @@ async function carregar(){
 }
 function baixarCSV(){
   if(document.getElementById('senha').value !== ADMIN_PASS){ alert('Senha incorreta'); return; }
-  window.location = 'https://ebtotem.up.railway.app/export';
+  window.location = 'api/export';
 }
 </script>
 </body>
