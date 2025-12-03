@@ -349,7 +349,7 @@
         // Confirmar voto
         async function confirmVote() {
             try {
-				const res = await fetch('./api/gravar.js', {
+				const res = await fetch('/api/gravar.js', {
 				    method: 'POST',
 				    headers: { 'Content-Type': 'application/json' },
 				    body: JSON.stringify({
