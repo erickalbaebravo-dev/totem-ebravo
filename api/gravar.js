@@ -19,8 +19,9 @@ export default async function handler(req, res) {
     }
 
     await pool.query(
-      "INSERT INTO votos (nota, origem) VALUES (3, 'teste_5435')"    );
-
+      "INSERT INTO votos (nota, origem) VALUES ($1, $2)"    );
+    await pool.query(q, [nota, origem]);
+    
     return res.status(200).json({ ok: true });
 
   } catch (error) {
